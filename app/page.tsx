@@ -1,9 +1,12 @@
-import Image from 'next/image'
+import { auth } from "@clerk/nextjs"
+import { redirect } from "next/navigation"
 
 export default function Home() {
-  return (
-    <main>
-      admin app
-    </main>
-  )
+  const { userId } = auth();
+
+  if (userId) {
+    redirect(`/${userId}`)
+  }
+
+  return null
 }
