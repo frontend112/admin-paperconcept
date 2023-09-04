@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Store {
+  userId String
+  id String @id @default(uuid())
+  name String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  products Product[] @relation("StoreToProduct")
+  categories Category[] @relation("StoreToCategory")
+  colors Color[] @relation("StoreToColor")
+}
+
+model Product {
+  id String @id @default(uuid())
+  name String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  store Store @relation("StoreToProduct", references: [id], fields: [name] )
+}
+
+model Category {
+  id String @id @default(uuid())
+  name String @unique
+  store Store @relation("StoreToCategory", references: [id], fields: [name])
+}
+
+model Color {
+  id String @id @default(uuid())
+  name String @unique
+  Store Store @relation("StoreToColor", references: [id], fields: [name])
+}
